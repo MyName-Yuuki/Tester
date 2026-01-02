@@ -14,7 +14,7 @@ on:
 jobs:
   build-pwdownloader:
     name: Build PWDownloader (Patcher)
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     steps:
     - name: Checkout code
@@ -23,11 +23,10 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Setup VS Dev Environment with MFC
+    - name: Setup VS Dev Environment
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x86
-        include: mfc
 
     - name: Display VS Version
       run: |
@@ -96,7 +95,7 @@ jobs:
 
   build-launcher:
     name: Build HintLauncher
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     steps:
     - name: Checkout code
@@ -149,7 +148,7 @@ jobs:
 
   create-release:
     name: Create Release Package
-    runs-on: windows-latest
+    runs-on: windows-2019
     needs: [build-pwdownloader, build-launcher]
 
     steps:
