@@ -38,7 +38,7 @@ jobs:
         msbuild PCKSystem.sln `
           /p:Configuration=Release `
           /p:Platform=Win32 `
-          /p:PlatformToolset=v140 `
+          /p:PlatformToolset=v142 `
           /t:PWDownloader `
           /p:WarningAsError=false `
           /nologo /v:minimal
@@ -49,7 +49,7 @@ jobs:
         msbuild PCKSystem.sln `
           /p:Configuration=Debug `
           /p:Platform=Win32 `
-          /p:PlatformToolset=v140 `
+          /p:PlatformToolset=v142 `
           /t:PWDownloader `
           /p:WarningAsError=false `
           /nologo /v:minimal
@@ -114,7 +114,7 @@ jobs:
         msbuild PCKSystem.sln `
           /p:Configuration=Release `
           /p:Platform=Win32 `
-          /p:PlatformToolset=v140 `
+          /p:PlatformToolset=v142 `
           /t:HintLauncher `
           /p:WarningAsError=false `
           /nologo /v:minimal
