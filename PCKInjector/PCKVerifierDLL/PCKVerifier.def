@@ -1,0 +1,6 @@
+LIBRARY PCKVerifier
+EXPORTS
+    PCK_SetKey
+    PCK_VerifyKey
+    PCK_HasKeyProtection
+    PCK_GetVersion
