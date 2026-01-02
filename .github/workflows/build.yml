@@ -5,6 +5,8 @@ on:
     branches: [ main, master ]
     paths:
       - 'LauncherAndPatcher/**'
+      - 'PCKSystem.sln'
+      - '.github/workflows/build.yml'
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:  # Allow manual trigger
@@ -33,24 +35,24 @@ jobs:
 
     - name: Build PWDownloader (Release)
       run: |
-        msbuild LauncherAndPatcher/ClientTools/PWDownloader/PWDownloader.dsp `
+        msbuild PCKSystem.sln `
           /p:Configuration=Release `
           /p:Platform=Win32 `
           /p:PlatformToolset=v140 `
-          /p:CharacterSet=MultiByte `
+          /t:PWDownloader `
           /p:WarningAsError=false `
-          /nologo /v:m
+          /nologo /v:minimal
 
     - name: Build PWDownloader (Debug) - Optional
       continue-on-error: true
       run: |
-        msbuild LauncherAndPatcher/ClientTools/PWDownloader/PWDownloader.dsp `
+        msbuild PCKSystem.sln `
           /p:Configuration=Debug `
           /p:Platform=Win32 `
           /p:PlatformToolset=v140 `
-          /p:CharacterSet=MultiByte `
+          /t:PWDownloader `
           /p:WarningAsError=false `
-          /nologo /v:m
+          /nologo /v:minimal
 
     - name: Find Built Files
       run: |
@@ -109,13 +111,13 @@ jobs:
 
     - name: Build HintLauncher (Release)
       run: |
-        msbuild LauncherAndPatcher/CElementHintLauncher/ElementHintLauncher.dsp `
+        msbuild PCKSystem.sln `
           /p:Configuration=Release `
           /p:Platform=Win32 `
           /p:PlatformToolset=v140 `
-          /p:CharacterSet=MultiByte `
+          /t:HintLauncher `
           /p:WarningAsError=false `
-          /nologo /v:m
+          /nologo /v:minimal
 
     - name: Find Built Files
       run: |
