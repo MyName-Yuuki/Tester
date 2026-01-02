@@ -12,7 +12,7 @@
 
 
 #include "StdAfx.h"
-#include "EC_HttpGet.h"
+// #include "EC_HttpGet.h" // Commented out - file not found
 #include "EC_PWDownload.h"
 #include "EC_Pipe.h"
 
@@ -32,7 +32,7 @@
 	#define P2SP_DLL_PATH "p2sp_4th_lib.dll"
 #endif
 
-// 60ÃëÄÚ²âÊÔP2SP¿É´ïµ½µÄ×î´óËÙ¶È
+// 60ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½P2SPï¿½É´ïµ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½
 #define MAX_TIME_TESTSPEED 60000
 
 #define FULLCLIENT_PACK_MD5 "patches/w2i_client_full.rar.MD5"
@@ -44,7 +44,7 @@
 //	
 ///////////////////////////////////////////////////////////////////////////
 
-const int GAME_ID = 3;		// ÍâÍø¸ÄÎª3
+const int GAME_ID = 3;		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª3
 
 const char g_szServerList[] = "server/updateserver.txt";
 const char g_szCurServerCfg[] = "../config/patcher/update.cfg";
@@ -66,7 +66,7 @@ void UDeleteFile(const char* filename)
 	DeleteFile(filename);
 }
 
-// HTTPÏÂÔØÎÄ¼þ
+// HTTPï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
 static void DownloadFileByHttp(const char* srcfile, const char* destfile, PATCH::callback_t callback,
 							   unsigned int start, int trytimes = 5)
 {
@@ -92,7 +92,7 @@ static void DownloadFileByHttp(const char* srcfile, const char* destfile, PATCH:
 		fclose( pFile );
 }
 
-// »ñÈ¡ÎÄ¼þµÄÒ»ÐÐÎÄ±¾
+// ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ä±ï¿½
 static bool GetLine(FILE* pFile, wchar_t* szLine)
 {
 	if( !fgetws(szLine, 512, pFile) )
@@ -102,7 +102,7 @@ static bool GetLine(FILE* pFile, wchar_t* szLine)
 	return true;
 }
 
-// ·Ö¸îÎÄ±¾
+// ï¿½Ö¸ï¿½ï¿½Ä±ï¿½
 static void SplitString(const std::wstring& str, const wchar_t* split, abase::vector<std::wstring>& strList)
 {
 	strList.clear();
@@ -181,14 +181,14 @@ struct _hash_wstring
 //  
 ///////////////////////////////////////////////////////////////////////////
 
-// »ñÈ¡ÊµÀý
+// ï¿½ï¿½È¡Êµï¿½ï¿½
 CECPWDownload& CECPWDownload::GetInstance()
 {
 	static CECPWDownload obj;
 	return obj;
 }
 
-// ¹¹Ôìº¯Êý
+// ï¿½ï¿½ï¿½ìº¯ï¿½ï¿½
 CECPWDownload::CECPWDownload()
 {
 	m_hP2SPDLL = NULL;
@@ -201,16 +201,16 @@ CECPWDownload::CECPWDownload()
 	InitializeCriticalSection(&m_csInfoLock);
 }
 
-// Îö¹¹º¯Êý
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 CECPWDownload::~CECPWDownload()
 {
 	DeleteCriticalSection(&m_csInfoLock);
 }
 
-// ³õÊ¼»¯ÏÂÔØÆ÷
+// ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 bool CECPWDownload::Init(HWND hWndClient)
 {
-	// ¼ÓÔØP2SP¶¯Ì¬¿â
+	// ï¿½ï¿½ï¿½ï¿½P2SPï¿½ï¿½Ì¬ï¿½ï¿½
 	m_hP2SPDLL = LoadLibrary(P2SP_DLL_PATH);
 	if( !m_hP2SPDLL )
 	{
@@ -219,7 +219,7 @@ bool CECPWDownload::Init(HWND hWndClient)
 		return false;
 	}
 
-	// ´´½¨¹ÜµÀ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Üµï¿½
 	m_pPipe = new CECPipe();
 	if( !m_pPipe->Init(hWndClient) )
 	{
@@ -227,18 +227,18 @@ bool CECPWDownload::Init(HWND hWndClient)
 		return false;
 	}
 
-	// Í¨Öª¿Í»§¶Ë£¬ÎÒµÄ´°¿Ú¾ä±ú
+	// Í¨Öªï¿½Í»ï¿½ï¿½Ë£ï¿½ï¿½ÒµÄ´ï¿½ï¿½Ú¾ï¿½ï¿½
 	::PostMessage(hWndClient, WM_SENDPIPEDATA, 1, (LPARAM)AfxGetMainWnd()->GetSafeHwnd());
 
-	// ¶ÁÈ¡ÉÏ´ÎÏÂÔØÐÅÏ¢£¬Èç¹ûÉÏ´ÎÏÂÔØ¹ý£¬Õâ´Î½«²»ÌáÊ¾Íæ¼ÒÖ±½ÓÏÂÔØ
+	// ï¿½ï¿½È¡ï¿½Ï´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ï¿½Ø¹ï¿½ï¿½ï¿½ï¿½ï¿½Î½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	GetLastClientDL();
 	return true;
 }
 
-// ÊÍ·ÅÏÂÔØÆ÷
+// ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void CECPWDownload::Release()
 {
-	// µÈ´ýÏß³Ì½áÊø
+	// ï¿½È´ï¿½ï¿½ß³Ì½ï¿½ï¿½ï¿½
 	m_bStopThread = true;
 	WaitForSingleObject(m_hDownloadThread, INFINITE);
 
@@ -261,19 +261,19 @@ void CECPWDownload::Release()
 	}
 }
 
-// ¿ªÊ¼ÏÂÔØ
+// ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½
 bool CECPWDownload::StartDownload()
 {
-	// »ñÈ¡ÉÏ´ÎÏÂÔØ¿Í»§¶ËµÄMD5¡¢ÎÄ¼þÃû¡¢ÏÂÔØÉÏ´«ËÙ¶È
+	// ï¿½ï¿½È¡ï¿½Ï´ï¿½ï¿½ï¿½ï¿½Ø¿Í»ï¿½ï¿½Ëµï¿½MD5ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ï¿½Ù¶ï¿½
 	GetLastClientDL();
 
-	// ¼ì²éÊÇ·ñÒÑ¾­ÏÂÔØÍê³É
+	// ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if( !m_LastDownInfo.filename.empty() )
 	{
 		std::string strClientFile = std::string(g_szDownloadDir) + m_LastDownInfo.filename;
 		if( _access(strClientFile.c_str(), 0) != -1 )
 		{
-			// Ö±½Ó½øÈë°²×°½×¶Î
+			// Ö±ï¿½Ó½ï¿½ï¿½ë°²×°ï¿½×¶ï¿½
 			m_bDownloadOK = true;
 			strcpy(g_szClientCompleted, g_szDownloadDir);
 			strcat(g_szClientCompleted, m_LastDownInfo.filename.c_str());
@@ -281,29 +281,29 @@ bool CECPWDownload::StartDownload()
 		}
 	}
 
-	// »ñÈ¡ÏÂÔØ·þÎñÆ÷µØÖ·
+	// ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ø·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·
 	if( !GetUpdateServer() )
 	{
-		AfxMessageBox("½âÎöÏÂÔØ·þÎñÆ÷µØÖ·Ê§°Ü£¡");
+		AfxMessageBox("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·Ê§ï¿½Ü£ï¿½");
 		LogOutput("CECPWDownload::StartDownload, Can't get the update server!");
 		return false;
 	}
 
-	// »ñÈ¡¿Í»§¶ËMD5ÎÄ¼þ
+	// ï¿½ï¿½È¡ï¿½Í»ï¿½ï¿½ï¿½MD5ï¿½Ä¼ï¿½
 //	std::string strMD5 = "674d7d0ad24470414241dbf10058a620";
 //	std::string strFile = "w2i_clientV1246.rar";
 	std::string strMD5, strFile;
 	GetFullClientMD5(strMD5, strFile);
 	if( strMD5.empty() )
 	{
-		AfxMessageBox("ÏÂÔØ¿Í»§¶ËMD5ÎÄ¼þÊ§°Ü£¡");
+		AfxMessageBox("ï¿½ï¿½ï¿½Ø¿Í»ï¿½ï¿½ï¿½MD5ï¿½Ä¼ï¿½Ê§ï¿½Ü£ï¿½");
 		LogOutput("CECPWDownload::StartDownload, Get the md5 file of the full client failed!");
 		return false;
 	}
 
 	if( !m_LastDownInfo.md5.empty() && m_LastDownInfo.md5 != strMD5 )
 	{
-		// É¾³ýÎ´ÏÂÔØÍêµÄÀÏ¿Í»§¶ËÎÄ¼þ
+		// É¾ï¿½ï¿½Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿Í»ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
 		std::string strFileNotCompleted = std::string(g_szDownloadDir) + m_LastDownInfo.filename + ".pd";
 		UDeleteFile(strFileNotCompleted.c_str());
 	}
@@ -313,11 +313,11 @@ bool CECPWDownload::StartDownload()
 	strcpy(g_szClientCompleted, g_szDownloadDir);
 	strcat(g_szClientCompleted, strFile.c_str());
 
-	// ³õÊ¼»¯P2SPÒýÇæ
+	// ï¿½ï¿½Ê¼ï¿½ï¿½P2SPï¿½ï¿½ï¿½ï¿½
 	if( !m_bP2SPInitOK && StartP2SPEngine() )
 		m_bP2SPInitOK = true;
 
-	// ¿ªÆôÏÂÔØÏß³Ì
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½
 	if( m_bP2SPInitOK )
 	{
 		m_hDownloadThread = CreateThread(NULL, 0, P2SPDownloadThread, this, 0, NULL);
@@ -326,7 +326,7 @@ bool CECPWDownload::StartDownload()
 	return true;
 }
 
-// ³õÊ¼»¯p2spÒýÇæ
+// ï¿½ï¿½Ê¼ï¿½ï¿½p2spï¿½ï¿½ï¿½ï¿½
 bool CECPWDownload::StartP2SPEngine()
 {
 	if( p2sp_Start(GAME_ID) )
@@ -346,21 +346,21 @@ bool CECPWDownload::StartP2SPEngine()
 		p2sp_Setting(&setting);
 		LogOutput("Start p2sp engine successfully!");
 
-		// ÉèÖÃÉÏÍøÓÅÏÈµÄÏÂÔØ·½Ê½
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Èµï¿½ï¿½ï¿½ï¿½Ø·ï¿½Ê½
 		p2sp_SetLsp(LSP_SETTING_PRIORITY_BROWSE);
 		Sleep(5000);
 		return true;
 	}
 	else
 	{
-		AfxMessageBox("³õÊ¼»¯p2spÏÂÔØÒýÇæÊ§°Ü£¡");
+		AfxMessageBox("ï¿½ï¿½Ê¼ï¿½ï¿½p2spï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê§ï¿½Ü£ï¿½");
 		LogOutput("CECPWDownload::StartP2SPEngine, Initialize the p2sp failed!");
 	}
 
 	return false;
 }
 
-// ÏÂÔØÏß³Ì
+// ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½
 DWORD WINAPI P2SPDownloadThread(LPVOID lpParameter)
 {
 	CECPWDownload* pDownload = (CECPWDownload*)lpParameter;
@@ -389,7 +389,7 @@ DWORD WINAPI P2SPDownloadThread(LPVOID lpParameter)
 					{
 						if( P2P_TASK_STATE_COMPLETE == pDownload->m_DownloadInfo.state )
 						{
-							// ÏÂÔØ³É¹¦
+							// ï¿½ï¿½ï¿½Ø³É¹ï¿½
 							pDownload->m_bDownloadOK = true;
 							LogOutput("P2SPDownloadThread, Download OK!!!!!!");
 							break;
@@ -419,7 +419,7 @@ DWORD WINAPI P2SPDownloadThread(LPVOID lpParameter)
 	return 0;
 }
 
-// Í£Ö¹ÏÂÔØ
+// Í£Ö¹ï¿½ï¿½ï¿½ï¿½
 void CECPWDownload::StopDownload()
 {
 	m_bStopThread = true;
@@ -432,7 +432,7 @@ void CECPWDownload::StopDownload()
 	}
 }
 
-// ÏìÓ¦½ø³öÓÎÏ·
+// ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï·
 void CECPWDownload::OnEnterOrLeaveGame(bool bEnter)
 {
 	if( bEnter )
@@ -455,7 +455,7 @@ void CECPWDownload::OnEnterOrLeaveGame(bool bEnter)
 	}
 }
 
-// ¿ªÊ¼°²×°³ÌÐò
+// ï¿½ï¿½Ê¼ï¿½ï¿½×°ï¿½ï¿½ï¿½ï¿½
 void CECPWDownload::Install()
 {
 	if( m_bDownloadOK )
@@ -465,14 +465,14 @@ void CECPWDownload::Install()
 	}
 }
 
-// ÍË³ö³ÌÐò
+// ï¿½Ë³ï¿½ï¿½ï¿½ï¿½ï¿½
 void CECPWDownload::Quit()
 {
 	m_bStopThread = true;
 	AfxGetMainWnd()->PostMessage(WM_COMMAND, IDCANCEL, 0);
 }
 
-// ¸üÐÂµ±Ç°×´Ì¬
+// ï¿½ï¿½ï¿½Âµï¿½Ç°×´Ì¬
 void CECPWDownload::Tick()
 {
 	static DWORD dwLastTime = GetTickCount();
@@ -481,7 +481,7 @@ void CECPWDownload::Tick()
 		m_pPipe->Tick();
 }
 
-// »ñÈ¡µ±Ç°ÏÂÔØ×´Ì¬
+// ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½×´Ì¬
 bool CECPWDownload::GetTaskInfo(float& fProgress, float& fDownSpeed, float& fUpSpeed)
 {
 	CScopedLock lock(&m_csInfoLock);
@@ -499,7 +499,7 @@ bool CECPWDownload::GetTaskInfo(float& fProgress, float& fDownSpeed, float& fUpS
 	return true;
 }
 
-// ÉèÖÃÏÂÔØºÍÉÏ´«ËÙ¶È
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øºï¿½ï¿½Ï´ï¿½ï¿½Ù¶ï¿½
 bool CECPWDownload::SetDownSpeed(int downspeed, int upspeed)
 {
 	if( m_bP2SPInitOK )
@@ -523,7 +523,7 @@ bool CECPWDownload::SetDownSpeed(int downspeed, int upspeed)
 	return false;
 }
 
-// »ñÈ¡µ±Ç°ÉèÖÃµÄ×î´óËÙ¶È
+// ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½
 bool CECPWDownload::GetMaxSpeed(int& downspeed, int& upspeed)
 {
 	if( m_bP2SPInitOK )
@@ -540,7 +540,7 @@ bool CECPWDownload::GetMaxSpeed(int& downspeed, int& upspeed)
 	return false;
 }
 
-// »ñÈ¡µ±Ç°ÏÂÔØ·þÎñÆ÷µÄµØÖ·£¬È¡ºÍPatcherÏàÍ¬µÄ·þÎñÆ÷
+// ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ø·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ö·ï¿½ï¿½È¡ï¿½ï¿½Patcherï¿½ï¿½Í¬ï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½
 bool CECPWDownload::GetUpdateServer()
 {
 	FILE* pFile;
@@ -554,7 +554,7 @@ bool CECPWDownload::GetUpdateServer()
 		return false;
 	}
 
-	fgetwc(pFile);	// Ìø¹ýUNICODE±ê¼Ç
+	fgetwc(pFile);	// ï¿½ï¿½ï¿½ï¿½UNICODEï¿½ï¿½ï¿½
 	while(GetLine(pFile, szLine))
 	{
 		wchar_t szName[40], szAddr[200];
@@ -585,7 +585,7 @@ bool CECPWDownload::GetUpdateServer()
 
 	fclose(pFile);
 
-	// ¼ÓÔØµ±Ç°·þÎñÆ÷Ãû
+	// ï¿½ï¿½ï¿½Øµï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if( !(pFile = fopen(g_szCurServerCfg, "rb")) )
 	{
 		LogOutput("CECPWDownload::GetUpdateServer, Can't load the current patcher config file!");
@@ -593,7 +593,7 @@ bool CECPWDownload::GetUpdateServer()
 	}
 
 	std::wstring strCurName;
-	fgetwc(pFile);	// Ìø¹ýUNICODE±ê¼Ç
+	fgetwc(pFile);	// ï¿½ï¿½ï¿½ï¿½UNICODEï¿½ï¿½ï¿½
 	while(GetLine(pFile, szLine))
 	{
 		SplitString(szLine, L" ", strList);
@@ -615,7 +615,7 @@ bool CECPWDownload::GetUpdateServer()
 	return true;
 }
 
-// »ñÈ¡ÍêÕû¿Í»§¶ËµÄMD5Öµ
+// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½Ëµï¿½MD5Öµ
 bool CECPWDownload::GetFullClientMD5(std::string& strMD5, std::string& strFile)
 {
 	char szMD5[33], szFile[MAX_PATH];
@@ -638,7 +638,7 @@ bool CECPWDownload::GetFullClientMD5(std::string& strMD5, std::string& strFile)
 	return true;
 }
 
-// ¶ÁÈ¡ÉÏ´ÎÏÂÔØ¿Í»§¶ËµÄÐÅÏ¢
+// ï¿½ï¿½È¡ï¿½Ï´ï¿½ï¿½ï¿½ï¿½Ø¿Í»ï¿½ï¿½Ëµï¿½ï¿½ï¿½Ï¢
 bool CECPWDownload::GetLastClientDL()
 {
 	char strMD5[33], strFile[MAX_PATH];
@@ -654,7 +654,7 @@ bool CECPWDownload::GetLastClientDL()
 	return true;
 }
 
-// Ð´ÈëÎ´Íê³ÉµÄ¿Í»§¶ËÏÂÔØÐÅÏ¢
+// Ð´ï¿½ï¿½Î´ï¿½ï¿½ÉµÄ¿Í»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 void CECPWDownload::WriteLastClientDL()
 {
 	int dspeed, uspeed;
@@ -665,7 +665,7 @@ void CECPWDownload::WriteLastClientDL()
 	fclose(pFile);
 }
 
-// ³õÊ¼»¯p2spÒýÇæ
+// ï¿½ï¿½Ê¼ï¿½ï¿½p2spï¿½ï¿½ï¿½ï¿½
 bool CECPWDownload::p2sp_Start(int gameID)
 {
 	typedef bool (*DLL_P2SPSTART) (int gameID);
@@ -680,7 +680,7 @@ bool CECPWDownload::p2sp_Start(int gameID)
 	return false;
 }
 
-// ÉèÖÃÅäÖÃ
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 bool CECPWDownload::p2sp_Setting(const SettingItemT* setting)
 {
 	typedef bool (*DLL_P2SPSETTING) (const SettingItemT* setting);
@@ -695,7 +695,7 @@ bool CECPWDownload::p2sp_Setting(const SettingItemT* setting)
 	return false;
 }
 
-// »ñÈ¡ÅäÖÃ
+// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 bool CECPWDownload::p2sp_GetSetting(SettingItemT* setting)
 {
 	typedef bool (*DLL_P2SPGETSETTING) (SettingItemT* setting);
@@ -710,7 +710,7 @@ bool CECPWDownload::p2sp_GetSetting(SettingItemT* setting)
 	return false;
 }
 
-// ÉèÖÃÏÂÔØ·½Ê½
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø·ï¿½Ê½
 bool CECPWDownload::p2sp_SetLsp(LSP_SETTING_FLAG flag)
 {
 	typedef bool (*DLL_P2SPSETLSP) (LSP_SETTING_FLAG flag);
@@ -725,7 +725,7 @@ bool CECPWDownload::p2sp_SetLsp(LSP_SETTING_FLAG flag)
 	return false;
 }
 
-// Ìí¼ÓÒ»¸öÏÂÔØÈÎÎñ
+// ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 bool CECPWDownload::p2sp_AddDownload(const char* filemd5)
 {
 	typedef bool (*DLL_P2SPADDDOWNLOAD) (const char* filemd5);
@@ -740,7 +740,7 @@ bool CECPWDownload::p2sp_AddDownload(const char* filemd5)
 	return false;
 }
 
-// ¿ªÊ¼Ò»¸öÏÂÔØÈÎÎñ
+// ï¿½ï¿½Ê¼Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 bool CECPWDownload::p2sp_StartDownload(const char* filemd5)
 {
 	typedef bool (*DLL_P2SPSTARTDOWNLOAD) (const char* filemd5);
@@ -755,7 +755,7 @@ bool CECPWDownload::p2sp_StartDownload(const char* filemd5)
 	return false;
 }
 
-// Í£Ö¹ÏÂÔØÈÎÎñ
+// Í£Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 bool CECPWDownload::p2sp_StopDownload(const char* filemd5)
 {
 	typedef bool (*DLL_P2SPSTOPDOWNLOAD) (const char* filemd5);
@@ -770,7 +770,7 @@ bool CECPWDownload::p2sp_StopDownload(const char* filemd5)
 	return false;
 }
 
-// É¾³ýÏÂÔØÈÎÎñ
+// É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 bool CECPWDownload::p2sp_DeleteDownload(const char* filemd5)
 {
 	typedef bool (*DLL_P2SPDELETEDOWNLOAD) (const char* filemd5);
@@ -785,7 +785,7 @@ bool CECPWDownload::p2sp_DeleteDownload(const char* filemd5)
 	return false;
 }
 
-// »ñÈ¡ÈÎÎñÐÅÏ¢
+// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 bool CECPWDownload::p2sp_GetTaskInformation(TaskInfomationT* info)
 {
 	typedef bool (*DLL_P2SPGETTASKINFORMATION) (TaskInfomationT* info);
@@ -800,7 +800,7 @@ bool CECPWDownload::p2sp_GetTaskInformation(TaskInfomationT* info)
 	return false;
 }
 
-// Í£Ö¹p2spÒýÇæ
+// Í£Ö¹p2spï¿½ï¿½ï¿½ï¿½
 bool CECPWDownload::p2sp_Stop()
 {
 	typedef bool (*DLL_P2SPSTOP) ();
@@ -815,7 +815,7 @@ bool CECPWDownload::p2sp_Stop()
 	return false;
 }
 
-// »ñÈ¡ÏÂÔØµÄ´íÎóÂë
+// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ØµÄ´ï¿½ï¿½ï¿½ï¿½ï¿½
 int CECPWDownload::GetErrorCode()
 {
 	CScopedLock lock(&m_csInfoLock);

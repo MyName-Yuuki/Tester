@@ -1,6 +1,7 @@
 #include "PckKeyVerifier.h"
 #include <string.h>
 #include <ctype.h>
+#include <stdio.h>
 
 // Global key storage
 static char g_szPckKey[512] = {0};  // Increased buffer size

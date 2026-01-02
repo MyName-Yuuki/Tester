@@ -13,8 +13,7 @@
 
 #pragma once
 
-#include <vector.h>
-#include <hashmap.h>
+#include <vector>
 #include <string>
 #include "i_p2sp_download.h"
 
@@ -50,7 +49,7 @@ class CECPipe;
 
 class CECPWDownload
 {
-	// обтьоъЁл
+	// О©╫О©╫О©╫О©╫О©╫ъЁО©╫
 	friend DWORD WINAPI P2SPDownloadThread(LPVOID lpParameter);
 
 	class CScopedLock
@@ -73,107 +72,107 @@ class CECPWDownload
 public:
 	virtual ~CECPWDownload();
 
-	// ЁУй╪╩╞/оЗ╩ыобтьфВ
+	// О©╫О©╫й╪О©╫О©╫/О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫
 	bool Init(HWND hWndClient);
 	void Release();
 
-	// ©╙й╪обть
+	// О©╫О©╫й╪О©╫О©╫О©╫О©╫
 	bool StartDownload();
 
-	// мёж╧обть
+	// мёж╧О©╫О©╫О©╫О©╫
 	void StopDownload();
 
-	// оЛс╕╫ЬЁЖсно╥
+	// О©╫О©╫с╕О©╫О©╫О©╫О©╫О©╫О©╫о╥
 	void OnEnterOrLeaveGame(bool bEnter);
 
-	// ©╙й╪╟╡в╟
+	// О©╫О©╫й╪О©╫О©╫в╟
 	void Install();
 
-	// мкЁЖЁлпР
+	// О©╫кЁО©╫О©╫О©╫О©╫О©╫
 	void Quit();
 
-	// ╦Эпббъ╪╜
+	// О©╫О©╫О©╫О©╫О©╫ъ╪О©╫
 	void Tick();
 
-	// ╩Ях║╣╠г╟обтьв╢л╛
+	// О©╫О©╫х║О©╫О©╫г╟О©╫О©╫О©╫О©╫в╢л╛
 	bool GetTaskInfo(float& fProgress, float& fDownSpeed, float& fUpSpeed);
 
-	// иХжцобтькы╤х
+	// О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ы╤О©╫
 	bool SetDownSpeed(int downspeed, int upspeed);
 
-	// ╩Ях║╣╠г╟иХжц╣добтькы╤х
+	// О©╫О©╫х║О©╫О©╫г╟О©╫О©╫О©╫ц╣О©╫О©╫О©╫О©╫О©╫О©╫ы╤О©╫
 	bool GetMaxSpeed(int& downspeed, int& upspeed);
 
-	// ╩Ях║╧э╣юж╦уК
+	// О©╫О©╫х║О©╫э╣О©╫ж╦О©╫О©╫
 	CECPipe* GetPipe() { return m_pPipe; }
 
-	// йг╥ЯуЩтзобть
+	// О©╫г╥О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫
 	bool IsDownloading() const { return m_hDownloadThread != NULL; }
 
-	// йг╥ЯобтьмЙ╠о
+	// О©╫г╥О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫
 	bool IsDownloadOK() const { return m_bDownloadOK; }
 
-	// ╩Ях║╢МнСбК
+	// О©╫О©╫х║О©╫О©╫О©╫О©╫О©╫О©╫
 	int GetErrorCode();
 
-	// ╩Ях║й╣юЩ
+	// О©╫О©╫х║й╣О©╫О©╫
 	static CECPWDownload& GetInstance();
 
 protected:
 	HMODULE m_hP2SPDLL;
-	std::string m_sServerAddr;			// MD5нд╪Чобть╥ЧнЯфВ
-	HANDLE m_hDownloadThread;			// обтьоъЁл
-	bool m_bP2SPInitOK;					// P2SP©БЁУй╪╩╞мЙ╠о
-	CRITICAL_SECTION m_csInfoLock;		// обтьпео╒╪скЬ
-	TaskInfomationT m_DownloadInfo;		// ╣╠г╟обтьпео╒
-	DOWNLOAD_INFO m_LastDownInfo;		// ио╢нобть╣дпео╒
-	CECPipe* m_pPipe;					// сК©м╩╖╤км╗пе╣д╧э╣ю
+	std::string m_sServerAddr;			// MD5О©╫д╪О©╫О©╫О©╫О©╫ь╥О©╫О©╫О©╫О©╫О©╫
+	HANDLE m_hDownloadThread;			// О©╫О©╫О©╫О©╫О©╫ъЁО©╫
+	bool m_bP2SPInitOK;					// P2SPО©╫О©╫О©╫й╪О©╫О©╫О©╫О©╫О©╫
+	CRITICAL_SECTION m_csInfoLock;		// О©╫О©╫О©╫О©╫О©╫О©╫о╒О©╫О©╫О©╫О©╫
+	TaskInfomationT m_DownloadInfo;		// О©╫О©╫г╟О©╫О©╫О©╫О©╫О©╫О©╫о╒
+	DOWNLOAD_INFO m_LastDownInfo;		// О©╫о╢О©╫О©╫О©╫О©╫ь╣О©╫О©╫О©╫о╒
+	CECPipe* m_pPipe;					// О©╫О©╫м╩О©╫О©╫О©╫м╗О©╫е╣д╧э╣О©╫
 
-	volatile bool m_bDownloadOK;		// обтьмЙЁи
-	volatile bool m_bStopThread;		// мёж╧обтьоъЁл
+	volatile bool m_bDownloadOK;		// О©╫О©╫О©╫О©╫О©╫О©╫О©╫
+	volatile bool m_bStopThread;		// мёж╧О©╫О©╫О©╫О©╫О©╫ъЁО©╫
 
 protected:
 	CECPWDownload();
 
-	// ЁУй╪╩╞p2spрЩгФ
+	// О©╫О©╫й╪О©╫О©╫p2spО©╫О©╫О©╫О©╫
 	bool p2sp_Start(int gameID);
 	
-	// иХжц╩Ях║еДжц
+	// О©╫О©╫О©╫ц╩О©╫х║О©╫О©╫О©╫О©╫
 	bool p2sp_Setting(const SettingItemT* setting);
 	bool p2sp_GetSetting(SettingItemT* setting);
 	bool p2sp_SetLsp(LSP_SETTING_FLAG flag);
 
-	// лМ╪ср╩╦ЖобтьхннЯ
+	// О©╫О©╫О©╫О©╫р╩О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫
 	bool p2sp_AddDownload(const char* filemd5);
 	
-	// ©╙й╪р╩╦ЖобтьхннЯ
+	// О©╫О©╫й╪р╩О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫
 	bool p2sp_StartDownload(const char* filemd5);
 	
-	// мёж╧обтьхннЯ
+	// мёж╧О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫
 	bool p2sp_StopDownload(const char* filemd5);
 	
-	// и╬ЁЩобтьхннЯ
+	// и╬О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫
 	bool p2sp_DeleteDownload(const char* filemd5);
 	
-	// ╩Ях║хннЯпео╒
+	// О©╫О©╫х║О©╫О©╫О©╫О©╫О©╫О©╫о╒
 	bool p2sp_GetTaskInformation(TaskInfomationT* info);
 	
-	// мёж╧p2spрЩгФ
+	// мёж╧p2spО©╫О©╫О©╫О©╫
 	bool p2sp_Stop();
 
-	// ╩Ях║╣╠г╟╦Эпб╥ЧнЯфВ╣д╣ьж╥
+	// О©╫О©╫х║О©╫О©╫г╟О©╫О©╫О©╫б╥О©╫О©╫О©╫О©╫О©╫О©╫д╣О©╫ж╥
 	bool GetUpdateServer();
 
-	// ╩Ях║╢Щобть©м╩╖╤к╣дMD5
+	// О©╫О©╫х║О©╫О©╫О©╫О©╫О©╫ь©м╩О©╫О©╫к╣О©╫MD5
 	bool GetFullClientMD5(std::string& strMD5, std::string& strFile);
 
-	// ╩Ях║ио╢нобть╣дпео╒
+	// О©╫О©╫х║О©╫о╢О©╫О©╫О©╫О©╫ь╣О©╫О©╫О©╫о╒
 	bool GetLastClientDL();
 
-	// п╢хКн╢мЙЁи╣д©м╩╖╤кобтьпео╒
+	// п╢О©╫О©╫н╢О©╫О©╫и╣д©м╩О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫о╒
 	void WriteLastClientDL();
 
-	// фТ╤╞P2SPрЩгФ
+	// О©╫О©╫О©╫О©╫P2SPО©╫О©╫О©╫О©╫
 	bool StartP2SPEngine();
 };
 
