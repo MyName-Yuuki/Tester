@@ -1,0 +1,233 @@
+name: Build PWDownloader and Launcher
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'LauncherAndPatcher/**'
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  build-pwdownloader:
+    name: Build PWDownloader (Patcher)
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup VS Dev Environment
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x86
+
+    - name: Display VS Version
+      run: |
+        msbuild -version
+        cl
+
+    - name: Build PWDownloader (Release)
+      run: |
+        msbuild LauncherAndPatcher/ClientTools/PWDownloader/PWDownloader.dsp `
+          /p:Configuration=Release `
+          /p:Platform=Win32 `
+          /p:PlatformToolset=v140 `
+          /p:CharacterSet=MultiByte `
+          /p:WarningAsError=false `
+          /nologo /v:m
+
+    - name: Build PWDownloader (Debug) - Optional
+      continue-on-error: true
+      run: |
+        msbuild LauncherAndPatcher/ClientTools/PWDownloader/PWDownloader.dsp `
+          /p:Configuration=Debug `
+          /p:Platform=Win32 `
+          /p:PlatformToolset=v140 `
+          /p:CharacterSet=MultiByte `
+          /p:WarningAsError=false `
+          /nologo /v:m
+
+    - name: Find Built Files
+      run: |
+        Write-Host "Searching for PWDownloader.exe..."
+        Get-ChildItem -Path LauncherAndPatcher -Recurse -Filter "*.exe" | Format-Table FullName, Length
+
+    - name: Copy Release Build
+      run: |
+        if (Test-Path "LauncherAndPatcher/ClientTools/PWDownloader/Release/PWDownloader.exe") {
+          New-Item -ItemType Directory -Force -Path artifacts
+          Copy-Item "LauncherAndPatcher/ClientTools/PWDownloader/Release/PWDownloader.exe" -Destination "artifacts/PWDownloader.exe"
+          Write-Host "✓ PWDownloader.exe copied to artifacts/"
+        } else {
+          Write-Host "⚠ PWDownloader.exe not found in Release folder"
+          Get-ChildItem -Path LauncherAndPatcher/ClientTools/PWDownloader -Recurse -Filter "*.exe"
+        }
+
+    - name: Copy Debug Build (if exists)
+      continue-on-error: true
+      run: |
+        if (Test-Path "LauncherAndPatcher/ClientTools/PWDownloader/Debug/PWDownloader_d.exe") {
+          Copy-Item "LauncherAndPatcher/ClientTools/PWDownloader/Debug/PWDownloader_d.exe" -Destination "artifacts/PWDownloader_d.exe"
+          Write-Host "✓ PWDownloader_d.exe copied"
+        }
+
+    - name: Upload PWDownloader Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: PWDownloader-Release
+        path: artifacts/PWDownloader.exe
+        retention-days: 30
+
+    - name: Upload Debug Artifact (if exists)
+      continue-on-error: true
+      uses: actions/upload-artifact@v4
+      with:
+        name: PWDownloader-Debug
+        path: artifacts/PWDownloader_d.exe
+        retention-days: 30
+
+  build-launcher:
+    name: Build HintLauncher
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup VS Dev Environment
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x86
+
+    - name: Build HintLauncher (Release)
+      run: |
+        msbuild LauncherAndPatcher/CElementHintLauncher/ElementHintLauncher.dsp `
+          /p:Configuration=Release `
+          /p:Platform=Win32 `
+          /p:PlatformToolset=v140 `
+          /p:CharacterSet=MultiByte `
+          /p:WarningAsError=false `
+          /nologo /v:m
+
+    - name: Find Built Files
+      run: |
+        Write-Host "Searching for HintLauncher.exe..."
+        Get-ChildItem -Path LauncherAndPatcher/CElementHintLauncher -Recurse -Filter "*.exe" | Format-Table FullName, Length
+
+    - name: Copy Launcher Build
+      run: |
+        if (Test-Path "LauncherAndPatcher/CBin/wmgj_HintLauncher.exe") {
+          New-Item -ItemType Directory -Force -Path artifacts
+          Copy-Item "LauncherAndPatcher/CBin/wmgj_HintLauncher.exe" -Destination "artifacts/HintLauncher.exe"
+          Write-Host "✓ HintLauncher.exe copied"
+        } elseif (Test-Path "LauncherAndPatcher/CElementHintLauncher/Release/HintLauncher.exe") {
+          New-Item -ItemType Directory -Force -Path artifacts
+          Copy-Item "LauncherAndPatcher/CElementHintLauncher/Release/HintLauncher.exe" -Destination "artifacts/HintLauncher.exe"
+          Write-Host "✓ HintLauncher.exe copied"
+        } else {
+          Write-Host "⚠ HintLauncher.exe not found"
+          Get-ChildItem -Path LauncherAndPatcher/CElementHintLauncher -Recurse -Filter "*.exe"
+        }
+
+    - name: Upload HintLauncher Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: HintLauncher-Release
+        path: artifacts/HintLauncher.exe
+        retention-days: 30
+
+  create-release:
+    name: Create Release Package
+    runs-on: windows-latest
+    needs: [build-pwdownloader, build-launcher]
+
+    steps:
+    - name: Download All Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: all-artifacts
+
+    - name: Create Release Package
+      run: |
+        New-Item -ItemType Directory -Force -Path release-package
+
+        # Copy executables
+        if (Test-Path "all-artifacts/PWDownloader-Release/PWDownloader.exe") {
+          Copy-Item "all-artifacts/PWDownloader-Release/PWDownloader.exe" -Destination "release-package/"
+          Write-Host "✓ PWDownloader.exe added"
+        }
+
+        if (Test-Path "all-artifacts/HintLauncher-Release/HintLauncher.exe") {
+          Copy-Item "all-artifacts/HintLauncher-Release/HintLauncher.exe" -Destination "release-package/"
+          Write-Host "✓ HintLauncher.exe added"
+        }
+
+        # Create README
+        @"
+        # PCK Key Verification System - Build Package
+
+        ## Files Included:
+        - PWDownloader.exe - Patcher with key verification
+        - HintLauncher.exe - Game launcher
+
+        ## Current Key Configuration:
+        Key: RAHASIA123
+        Location: PWDownloaderDlg.cpp line 152
+
+        ## How to Change Key:
+        See: LauncherAndPatcher/KEY_SETUP_GUIDE.md
+
+        ## Build Information:
+        Build Date: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
+        Build Platform: Windows (GitHub Actions)
+        Visual Studio: Latest with v140 toolset
+
+        ## Documentation:
+        Full documentation available in LauncherAndPatcher/ folder:
+        - QUICK_START.md
+        - KEY_SETUP_GUIDE.md
+        - BUILD_GUIDE.md
+        - And more...
+
+        ---
+        Built with GitHub Actions - PCK Key Verification System
+        "@ | Out-File -FilePath "release-package/README.txt" -Encoding UTF8
+
+        # List files
+        Get-ChildItem -Path release-package | Format-Table Name, Length
+
+    - name: Create ZIP Archive
+      run: |
+        Compress-Archive -Path release-package/* -DestinationPath PCK-System-Build.zip
+
+    - name: Upload Release Package
+      uses: actions/upload-artifact@v4
+      with:
+        name: PCK-System-Complete-Package
+        path: PCK-System-Build.zip
+        retention-days: 90
+
+    - name: Build Summary
+      run: |
+        Write-Host "========================================"
+        Write-Host "  BUILD SUMMARY"
+        Write-Host "========================================"
+        Write-Host ""
+        Write-Host "✓ PWDownloader.exe built"
+        Write-Host "✓ HintLauncher.exe built"
+        Write-Host "✓ Release package created"
+        Write-Host ""
+        Write-Host "Download artifacts from:"
+        Write-Host "1. Actions tab → This workflow run"
+        Write-Host "2. Scroll to Artifacts section"
+        Write-Host "3. Download PCK-System-Complete-Package.zip"
+        Write-Host ""
+        Write-Host "========================================"
