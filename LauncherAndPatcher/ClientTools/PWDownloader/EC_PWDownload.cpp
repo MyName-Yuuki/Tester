@@ -12,7 +12,7 @@
 
 
 #include "StdAfx.h"
-// #include "EC_HttpGet.h" // Commented out - file not found
+#include "../../CCommon/EC_HttpGet.h" // Using stub header
 #include "EC_PWDownload.h"
 #include "EC_Pipe.h"
 
